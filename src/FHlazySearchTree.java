@@ -91,7 +91,10 @@ public class FHlazySearchTree<E extends Comparable< ? super E > >
       if (rooty == null)
          return null;
       if (rooty.lftChild == null)
+      {
+         System.out.println("FIND MIN ROOTY "  + rooty.data);
          return rooty;
+      }
       return findMin(rooty.lftChild);
    }
    
@@ -219,13 +222,14 @@ public class FHlazySearchTree<E extends Comparable< ? super E > >
       if (root == null)
          return root;
 
+     
 //      compareResult = x.compareTo(root.data); 
         System.out.println("The Root is " + root.data);
         if(root.lftChild != null)
          if (root.lftChild.data.compareTo(root.data) < 0)
-         {
+         {  
             if(root.lftChild.deleted == true)
-            {
+            {  System.out.println("LEFT ROOT " + root.data + " THE ROOT LEFT CHILD " + root.lftChild.data);
                removeHard(root.lftChild);
             }
             
@@ -233,7 +237,7 @@ public class FHlazySearchTree<E extends Comparable< ? super E > >
          }
         if(root.rtChild != null)
          if (root.rtChild.data.compareTo(root.data) > 0 )
-         {
+         {  System.out.println("RIGHT ROOT" + root.data);
             if(root.rtChild.deleted == true)
             {
                removeHard(root.rtChild);
@@ -263,13 +267,14 @@ public class FHlazySearchTree<E extends Comparable< ? super E > >
    
    protected FHlazySTNode<E> removeHard (FHlazySTNode<E> root)
    {  // found the node
-      root.deleted = false;
+      
      if (root.lftChild != null && root.rtChild != null)
       {
          root.data = findMin(root.rtChild).data;
+         root.deleted = false;
          root.rtChild = removeHard(root.rtChild);
       }
-      else
+      else if (root.lftChild == null && root.rtChild == null)
       {
 //         if(root.lftChild != null)
 //         {
@@ -289,7 +294,7 @@ public class FHlazySearchTree<E extends Comparable< ? super E > >
             (root.lftChild != null)? root.lftChild : root.rtChild;
          
          mSizeHard--;
-         collectGarbage(root);
+         //collectGarbage(root);
       }
       
       return root;
