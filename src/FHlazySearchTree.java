@@ -1,4 +1,5 @@
 import cs_1c.*;
+
 import java.util.*;
 
 import cs_1c.Traverser;
@@ -60,6 +61,13 @@ public class FHlazySearchTree<E extends Comparable< ? super E > >
       return (mSize != oldSize);
    }
    
+   public boolean collectGarbage(  )
+   {
+      int oldSize = mSizeHard;
+      collectGarbage(mRoot);
+      return (mSizeHard != oldSize);
+   }
+   
    public < F extends Traverser<? super E > > 
    void traverse(F func)
    {
@@ -103,6 +111,7 @@ public class FHlazySearchTree<E extends Comparable< ? super E > >
       if (root == null)
       {
          mSize++;
+         mSizeHard++;
          return new FHlazySTNode<E>(x, null, null, false);
       }
       
@@ -111,6 +120,14 @@ public class FHlazySearchTree<E extends Comparable< ? super E > >
          root.lftChild = insert(root.lftChild, x);
       else if ( compareResult > 0 && root.deleted != true)
          root.rtChild = insert( root.rtChild, x);
+     
+      else if (compareResult == 0 &&  root.deleted == true)
+      {
+         root.deleted = false;
+         mSize++;
+         mSizeHard++;
+         return root;
+      }
 
       return root;
    }
@@ -146,7 +163,7 @@ public class FHlazySearchTree<E extends Comparable< ? super E > >
          return;
 
       traverse(func, treeNode.lftChild);
-      func.visit(treeNode.data);
+      if (treeNode.deleted != true) {func.visit(treeNode.data);};
       traverse(func, treeNode.rtChild);
    }
    
@@ -158,9 +175,9 @@ public class FHlazySearchTree<E extends Comparable< ? super E > >
          return null;
 
       compareResult = x.compareTo(root.data); 
-      if (compareResult < 0)
+      if (compareResult < 0 && root.deleted != true)
          return find(root.lftChild, x);
-      if (compareResult > 0)
+      if (compareResult > 0 && root.deleted != true)
          return find(root.rtChild, x);
       return root;   // found
    }
@@ -194,9 +211,78 @@ public class FHlazySearchTree<E extends Comparable< ? super E > >
       return (leftHeight > rightHeight)? leftHeight : rightHeight;
    }
    
-   protected void collectGarbage()
+ 
+   protected FHlazySTNode<E> collectGarbage( FHlazySTNode<E> root)
    {
+      //int compareResult;  // avoid multiple calls to compareTo()
+     
+      if (root == null)
+         return root;
+
+//      compareResult = x.compareTo(root.data); 
       
+         if (root.lftChild != null) 
+         {
+            if (root.lftChild.deleted == true )
+            {  
+               System.out.println("LEFT - DELETED REMOVED");
+               removeHard(root.lftChild);
+               collectGarbage(root.lftChild);
+            }
+            else
+            {
+               collectGarbage(root.lftChild);
+            }
+         }
+      else if (root.rtChild != null)
+      {
+         if( root.rtChild.deleted == true )
+         { 
+            System.out.println("I had it to collect garbage private  RIGHT");      
+            removeHard(root.rtChild);
+            collectGarbage(root.rtChild);
+         }
+         else
+         {
+            collectGarbage(root.rtChild);
+         }
+      }
+         return root;
+   }
+   
+   protected FHlazySTNode<E> removeHard (FHlazySTNode<E> root)
+   {  // found the node
+     if (root.lftChild != null && root.rtChild != null)
+      {
+         root.data = findMin(root.rtChild).data;
+         root.deleted = false;
+         root.rtChild = collectGarbage(root.rtChild);
+      }
+      else
+      {
+         root =
+            (root.lftChild != null)? root.lftChild : root.rtChild;
+         mSizeHard--;
+         collectGarbage(root);
+      }
+      
+      return root;
+   }
+   public void printPreOrder(FHlazySTNode<E> root) 
+   {
+      printPreOrder(root);
+      System.out.println("");      
+   }
+   private void printPreOrderRec(FHlazySTNode<E> currRoot)
+   {
+      if (currRoot == null)
+         return;
+      
+      System.out.print(currRoot.data + ", ");
+      printPreOrderRec(currRoot.lftChild);
+      printPreOrderRec(currRoot.rtChild);
+      
+               
    }
 }
 
