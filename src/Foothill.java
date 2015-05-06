@@ -29,13 +29,12 @@ public class Foothill
       searchTree.insert(20);
       searchTree.insert(30);
       searchTree.insert(70);
-      searchTree.insert(10);
+      searchTree.insert(20);
+      searchTree.insert(9);
       searchTree.insert(60);
-   
-         
-                  
-      
-      
+      searchTree.insert(61);
+      searchTree.insert(62);
+     
       //TRAVERSE
       System.out.println( "\nTRAVERSE after populating: ");
       searchTree.traverse(intPrinter);
@@ -68,6 +67,11 @@ public class Foothill
       System.out.println( "\n70 and 20: Traverse after garbage");
       searchTree.traverse(intPrinter);
       System.out.println( "\ntree 1 size: " + searchTree.size() 
+         + "  Hard size: " + searchTree.sizeHard() );
+      
+      System.out.println( "\nCollecting garbage REPEAT" );
+      searchTree.collectGarbage();
+      System.out.println( "tree 1 size: " + searchTree.size() 
          + "  Hard size: " + searchTree.sizeHard() );
      
       System.out.println( "\n70: Reinsert after garbage");
