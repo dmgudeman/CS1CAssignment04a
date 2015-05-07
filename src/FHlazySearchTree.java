@@ -300,84 +300,49 @@ public class FHlazySearchTree<E extends Comparable< ? super E > >
    {
       if (root == null)
          return;
-
       if (root.deleted == true)
       {
          removeHard(root);
          collectGarbage(root);
       }
-
       else if (root.lftChild != null && root.rtChild != null)
       {
          if (root.lftChild.deleted == true)
-         {
+         { System.out.println("OOONNEEE");
             collectGarbage(removeHard(root.lftChild));
-         } else if (root.rtChild != null)
-         {
-            if (root.rtChild.deleted == true)
-            {
-               collectGarbage(removeHard(root.rtChild));
-            }
          }
-
-      } else if (root.lftChild != null && root.rtChild == null)
+      
+         else if (root.rtChild.deleted == true)
+         { System.out.println("TWWWOOO");
+               collectGarbage(removeHard(root.rtChild));
+          }
+          
+      }
+      else if (root.lftChild != null && root.rtChild == null)
       {
          if (root.lftChild.deleted == true)
-         {
-            collectGarbage(removeHard(root.lftChild));
-       } else if (root.rtChild != null && root.lftChild == null)
-           if (root.rtChild.deleted == true)
-            collectGarbage(removeHard(root.rtChild));
-      
-         else if (root.rtChild == null && root.lftChild == null)
-           if (root.lftChild.deleted == true)
-              root.lftChild = null;
-           if (root.lftChild.deleted == true)
-              root.rtChild = null;
-         
-
-//     
-////      compareResult = x.compareTo(root.data); 
-//        System.out.println("The Root is " + root.data);
-//        if(root.lftChild != null)
-//         if (root.lftChild.data.compareTo(root.data) < 0)
-//         {  
-//            if(root.lftChild.deleted == true)
-//            {  System.out.println("LEFT ROOT " + root.data + " THE ROOT LEFT CHILD " + root.lftChild.data);
-//               removeHard(root.lftChild);
-//            }
-//            
-//            root.lftChild = collectGarbage(root.lftChild);
-//         }
-//        if(root.rtChild != null)
-//         if (root.rtChild.data.compareTo(root.data) > 0 )
-//         {  System.out.println("RIGHT ROOT" + root.data);
-//            if(root.rtChild.deleted == true)
-//            {
-//               removeHard(root.rtChild);
-//            }
-//            root.rtChild = collectGarbage(root.rtChild);
-//         }
-//         {
-//            if (root.lftChild.deleted == true )
-//            {  
-//               System.out.println("LEFT - DELETED REMOVED");
-//               removeHard(root.lftChild); 
-//               collectGarbage( root.lftChild);
-//            }
-//            
-//         }
-//         else if (root.rtChild != null  &&  root.rtChild.data.compareTo(root.data) > 0)
-//         {
-//            if( root.rtChild.deleted == true )
-//            { 
-//               System.out.println("I had it to collect garbage private  RIGHT");      
-//              removeHard(root.rtChild);
-//              collectGarbage( root.rtChild);
-//            }
-//         }
-         return;
+         {System.out.println("THREEE");
+             collectGarbage(removeHard(root.lftChild));
+          }
       }
+      else if (root.rtChild != null && root.lftChild == null)
+      {
+         if (root.rtChild.deleted == true)
+         { System.out.println("FOOOUUURRR");
+            collectGarbage(removeHard(root.rtChild));
+         }
+      }
+      else if (root.rtChild == null && root.lftChild == null)
+      {
+//         if (root.deleted == true)
+//            root.lftChild = null;
+//         if (root.lftChild.deleted == true)
+//            root.rtChild = null;
+         
+         System.out.println("FIIIIVVVEE");
+      }
+
+      return;
    }
    
    protected FHlazySTNode<E> removeHard (FHlazySTNode<E> root)
@@ -387,30 +352,38 @@ public class FHlazySearchTree<E extends Comparable< ? super E > >
                
      if (root.lftChild != null && root.rtChild != null)
       {  
-         FHlazySTNode<E> temp;
-         temp = findMin(root.rtChild);
-         root.data = temp.data;
+         root = findMin(root.rtChild);
          root.deleted = false;
          mSizeHard--;
          findMinRemove(root, root.rtChild, root.data); 
-         collectGarbage(root);
-         
+         collectGarbage(removeHard(root));         
       }
       else if(root.lftChild != null)
-      {
-            root.lftChild = root.lftChild.lftChild;
-            root = root.lftChild;
+      {     
+          E tempData = root.lftChild.data;
+          FHlazySTNode<E> tempRnode  = root.lftChild.rtChild;
+          FHlazySTNode<E> tempLnode = root.lftChild.lftChild;
+          root.lftChild = tempLnode ;
+          root.rtChild = tempRnode;
+          root.data = tempData;
           root.deleted = false;
-            mSizeHard--;
-            collectGarbage(root);
+          System.out.println("HEELLO LEFT");
+          mSizeHard--;
+          collectGarbage(removeHard(root));
        }
        else if(root.rtChild != null)
        {
-            root.rtChild = root.rtChild.rtChild;
-            root = root.rtChild;
+          E tempData = root.rtChild.data;
+          FHlazySTNode<E> tempRnode  = root.rtChild.rtChild;
+          FHlazySTNode<E> tempLnode = root.rtChild.lftChild;
+          root.lftChild = tempLnode ;
+          root.rtChild = tempRnode;
+          root.data = tempData;
           root.deleted = false;
-            mSizeHard--;
-            collectGarbage(root);
+          System.out.println("HEELLO RIGHT");
+          mSizeHard--;
+          collectGarbage(removeHard(root));
+
        } else {
 //         
 //         root =
