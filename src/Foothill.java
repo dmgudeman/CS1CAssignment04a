@@ -43,8 +43,8 @@ public class Foothill
          + "  Hard size: " + searchTree.sizeHard() );
 
       System.out.println( "\n60 soft removal: ");
-      if (searchTree.remove(50))
-         System.out.println( "removed " + 50 );
+      if (searchTree.remove(62))
+         System.out.println( "removed " + 62 );
       System.out.println( "tree 1 size: " + searchTree.size() 
          + "  Hard size: " + searchTree.sizeHard() );
       
