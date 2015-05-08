@@ -218,56 +218,74 @@ public class FHlazySearchTree<E extends Comparable< ? super E > >
    }
    
 /////////////////////////////////////////////////////////////////////////// 
-  
-   boolean isItALeftChild = false;
-
-   protected FHlazySTNode<E> findMinRemove(FHlazySTNode<E> parentNode, FHlazySTNode<E> root, E x)
-   {
  
+
+   protected FHlazySTNode<E> nodeReplacement(FHlazySTNode<E> root)
+   {
       int compareResult; // avoid multiple calls to compareTo()
 
       if (root == null)
+      {
+         System.out.println("returning null");
          return null;
-
-      compareResult = x.compareTo(root.data);
-
-      if (compareResult < 0)
+      } 
+      else if (root.rtChild != null && root.lftChild != null)
       {
-         isItALeftChild = false;
-         parentNode = root;
-         root = root.rtChild;
-         return findMinRemove(root, root.rtChild, x);
-      }
-      if (compareResult > 0)
+         compareResult = root.data.compareTo(root.rtChild.data);
+         if (compareResult < 0)
+         {
+            root = root.rtChild;
+            if (root.deleted == false)
+            {
+               root.deleted = false;
+               return root;
+            } 
+            else
+               nodeReplacement(root);
+         } 
+         else if (compareResult > 0)
+         {
+            root = root.lftChild;
+            if (root.deleted = false)
+            {
+               root.deleted = false;
+               return root;
+            } else
+               nodeReplacement(root);
+         }
+         return null;
+      } 
+      else if (root.rtChild != null && root.lftChild == null)
       {
-         isItALeftChild = true;
-         parentNode = root;
-         root = root.lftChild;
-         return findMinRemove(root, root.rtChild, x);
+         root.rtChild.deleted = true;
+         return root = root.rtChild;
+      } 
+      else if (root.rtChild == null && root.lftChild != null)
+      {
+         root.lftChild.deleted = true;
+         return root = root.lftChild;
+      } 
+      else
+      {
+         return root = null;
       }
-         if (isItALeftChild)
-            parentNode.lftChild = null;
-         if (!isItALeftChild)
-            parentNode.rtChild = null;
-     
-      
-      return root; // found
    }
 
 //////////////////////////////////////////////////////////////////////
  
-   protected void collectGarbage(FHlazySTNode<E> root)
+   protected FHlazySTNode<E> collectGarbage(FHlazySTNode<E> root)
    {
       if (root == null)
-         return;
+         return null;
+      
+     root = removeHard(root);
+     System.out.println("root.data " + root.data);
+     root.lftChild = collectGarbage(removeHard(root.lftChild));
+     System.out.println("root.data " + root.data);
+     root.rtChild = collectGarbage(removeHard(root.rtChild));
+     System.out.println("root.data " + root.data);
      
-   collectGarbage(removeHard(root.lftChild));
-         removeHard(root);
-        
-
-   
-
-     collectGarbage(removeHard(root.rtChild));
+     return root;
    }
     
 ////////////////////////////////////////////////////////////////////////
@@ -275,48 +293,60 @@ public class FHlazySearchTree<E extends Comparable< ? super E > >
    protected FHlazySTNode<E> removeHard (FHlazySTNode<E> root)
    {  
       if (root == null)
-         return root; 
-               
-      else if (root.lftChild != null && root.rtChild != null && root.deleted == true)
-      {
-        
-            root = findMinRemove(root, root.rtChild, root.data);
-            mSizeHard--;
-        
-        
+         return null; 
+              
+      if (root.lftChild != null && root.rtChild != null)
+      {   
+         if (root.deleted == true)
+         {  
+             mSizeHard--;
+             root.data = nodeReplacement(root).data;
+             root.deleted = false;
+             return root;
+         } 
+       return root; 
+           
       }
-      else if(root.lftChild != null && root.lftChild.deleted == true)     
-      {     
-            E tempData = root.lftChild.data;
-            FHlazySTNode<E> tempRnode  = root.lftChild.rtChild;
-            FHlazySTNode<E> tempLnode = root.lftChild.lftChild;
-            root.lftChild = tempLnode ;
-            root.rtChild = tempRnode;
-            root.data = tempData;
-            root = root.lftChild;
-            mSizeHard--;       
-       }
-       else if(root.rtChild != null  && root.rtChild.deleted == true)
-       {
-          E tempData = root.rtChild.data;
-          FHlazySTNode<E> tempRnode  = root.rtChild.rtChild;
-          FHlazySTNode<E> tempLnode = root.rtChild.lftChild;
-          root.lftChild = tempLnode ;
-          root.rtChild = tempRnode;
-          root.data = tempData;
-          root = root.rtChild;
-          root.deleted = false;
-          mSizeHard--;
-//          collectGarbage(removeHard(root));
-       }
-
-       else if (root.rtChild != null && root.lftChild != null && root.deleted == true)
-       { 
-          root = (root.lftChild != null) ? root.lftChild : root.rtChild;
-          mSizeHard--;
-       }
-      
-      return root;
+      else if(root.lftChild != null)     
+      {   
+         if (root.deleted == true)
+         { 
+            mSizeHard--;
+            return root = nodeReplacement(root);     
+         }
+         else
+          return root;
+      }
+      else if(root.rtChild != null)
+      {    
+         if (root.deleted == true)
+         {  System.out.println("LINE 222222222222222222222222222222");
+            mSizeHard--;
+            root = nodeReplacement(root);
+            root.deleted = false;
+            return root;
+         }
+         else 
+            {
+          return root;
+            }
+      }
+      else if (root.lftChild == null && root.rtChild == null)
+      {  
+         if (root.deleted == true)
+         { 
+            System.out.println("YESSSSS");
+            mSizeHard--;
+            return root = null;
+         }
+         return root;
+      }
+//      else
+//      { 
+//        return root = (root.lftChild != null) ? root.lftChild : root.rtChild;
+//      }
+     
+     return root;
    }
    public void printPreOrder(FHlazySTNode<E> root) 
    {
