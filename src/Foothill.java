@@ -42,7 +42,7 @@ public class Foothill
       System.out.println( "\ntree 1 size: " + searchTree.size() 
          + "  Hard size: " + searchTree.sizeHard() );
       
-//      SOFT REMOVAL
+      //SOFT REMOVAL
       System.out.println( "\n59 (one child) soft removal: ");
       if (searchTree.remove(59))
          System.out.println( "removed " + 59);
@@ -56,14 +56,13 @@ public class Foothill
       System.out.println( "tree 1 size: " + searchTree.size() 
          + "  Hard size: " + searchTree.sizeHard() );
       
-    //SOFT REMOVAL
+      //SOFT REMOVAL
       System.out.println( "\n62 (leaf) soft removal: ");
       if (searchTree.remove(62))
          System.out.println( "removed " + 20 );
       System.out.println( "tree 1 size: " + searchTree.size() 
          + "  Hard size: " + searchTree.sizeHard() );
-      
-      
+          
       //TRAVERSE
       System.out.println( "\n59, 20, 62 soft removal.\n Size "
             + "should be 7, Hard Size should be 10");
@@ -72,7 +71,7 @@ public class Foothill
          + "  Hard size: " + searchTree.sizeHard() );
       
       //GARBAGE COLLECTION
-      System.out.println( "\nCollecting garbage after soft remove.\n "
+      System.out.println( "\nCollecting garbage after soft remove of 3 items.\n"
             + "Size should be 7 and Hard Size should be 7. " );
       searchTree.collectGarbage();
       System.out.println( "tree 1 size: " + searchTree.size() 
@@ -97,42 +96,117 @@ public class Foothill
          + "  Hard size: " + searchTree.sizeHard() );
 
       //SOFT REMOVAL
-    System.out.println( "\n\nAttempting 9 soft removal: ");
-    searchTree.remove(9);
-       System.out.println( "removed " + 9 );
-    System.out.println( "tree 1 size: " + searchTree.size() 
-       + "  Hard size: " + searchTree.sizeHard() );
+      System.out.println( "\n\nAttempting 9 soft removal: ");
+      searchTree.remove(9);
+      System.out.println( "removed " + 9 );
+      System.out.println( "tree 1 size: " + searchTree.size() 
+         + "  Hard size: " + searchTree.sizeHard() );
     
-    //TRAVERSE
-    System.out.println( "\nTRAVERSE after SOFT REMOVAL of 9: ");
-    searchTree.traverse(intPrinter);
-    System.out.println( "\ntree 1 size: " + searchTree.size() 
-       + "  Hard size: " + searchTree.sizeHard() );
-    
-    System.out.println( "\nReinsert 9 which is in a soft delete state");
-    searchTree.insert(9);
-    System.out.println( "\ntree 1 size: " + searchTree.size() 
-          + "  Hard size: " + searchTree.sizeHard() );
-   
-    
-    //GARBAGE COLLECTION
-    System.out.println( "\nCollecting garbage after soft removal 9" );
-    searchTree.collectGarbage();
-    System.out.println( "tree 1 size: " + searchTree.size() 
-       + "  Hard size: " + searchTree.sizeHard() );
-    
-    //TRAVERSE
-    System.out.println( "\nTRAVERSE after GARBAGE COLLECTION of 9 removal: ");
-    searchTree.traverse(intPrinter);
-    System.out.println( "\ntree 1 size: " + searchTree.size() 
-       + "  Hard size: " + searchTree.sizeHard() );
-
-     
-      System.out.println( "\n60: Reinsert after garbage");
-      searchTree.insert(60);
+      //TRAVERSE
+      System.out.println( "\nTRAVERSE after SOFT REMOVAL of 9: ");
+      searchTree.traverse(intPrinter);
       System.out.println( "\ntree 1 size: " + searchTree.size() 
-            + "  Hard size: " + searchTree.sizeHard() );
+         + "  Hard size: " + searchTree.sizeHard() );
+    
+      System.out.println( "\nReinsert 9 which is in a soft delete state.\n"
+         + "Should only increment the size not the hard size.");  
+      searchTree.insert(9);
+      System.out.println( "\ntree 1 size: " + searchTree.size() 
+         + "  Hard size: " + searchTree.sizeHard() );
+      
+       // test assignment operator
+      System.out.println("\nClone Search Tree (ST) into SEarch Tree 2 (ST2)\n");
+       FHlazySearchTree<Integer> searchTree2 
+          = (FHlazySearchTree<Integer>)searchTree.clone();
+       
+       //TRAVERSE
+       System.out.println( "\nSearch Tree (ST) now: ");
+       searchTree.traverse(intPrinter);
+       System.out.println( "tree 1 size: " + searchTree.size() 
+          + "  Hard size: " + searchTree.sizeHard() );
      
+       //TRAVERSE
+       System.out.println( "\nSearch Tree 2 (ST2) now: ");
+       searchTree2.traverse(intPrinter);
+       System.out.println( "\ntree 1 size: " + searchTree2.size() 
+          + "  Hard size: " + searchTree2.sizeHard() );
+       
+       searchTree2.insert(500);
+       searchTree2.insert(200);
+       searchTree2.insert(300);
+       searchTree2.insert(700);
+       searchTree2.insert(100);
+       searchTree2.insert(600);
+       
+       //TRAVERSE
+       System.out.println( "\nSearch Tree after insert into ST2: ");
+       searchTree.traverse(intPrinter);
+       System.out.println( "\ntree 1 size: " + searchTree.size() 
+          + "  Hard size: " + searchTree.sizeHard() );
+     
+       //TRAVERSE
+       System.out.println( "\nSearch Tree 2 now: ");
+       searchTree2.traverse(intPrinter);
+       System.out.println( "\ntree 1 size: " + searchTree2.size() 
+          + "  Hard size: " + searchTree2.sizeHard() );
+       
+    // test soft insertion and deletion:
+
+       System.out.println( "Adding 'hard' 22 - should see new sizes. " );
+       searchTree.insert(22);
+       searchTree.traverse(intPrinter);
+       System.out.println( "\ntree 1 size: " + searchTree.size() 
+          + "  Hard size: " + searchTree.sizeHard() );
+
+       System.out.println( "\nAfter soft removal. " );
+       searchTree.remove(22);
+       searchTree.traverse(intPrinter);
+       System.out.println( "\ntree 1 size: " + searchTree.size() 
+          + "  Hard size: " + searchTree.sizeHard() );
+
+       System.out.println( "Repeating soft removal. Should see no change. " );
+       searchTree.remove(22);
+       searchTree.traverse(intPrinter);
+       System.out.println( "\ntree 1 size: " + searchTree.size() 
+          + "  Hard size: " + searchTree.sizeHard() );
+
+       System.out.println( "Soft insertion. Hard size should not change. " );
+       searchTree.insert(22);
+       searchTree.traverse(intPrinter);
+       System.out.println( "\ntree 1 size: " + searchTree.size() 
+          + "  Hard size: " + searchTree.sizeHard() );
+
+         
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+       
+   
+//      //GARBAGE COLLECTION
+//      System.out.println( "\nCollecting garbage after soft removal 9" );
+//      searchTree.collectGarbage();
+//      System.out.println( "tree 1 size: " + searchTree.size() 
+//         + "  Hard size: " + searchTree.sizeHard() );
+//    
+//      //TRAVERSE
+//      System.out.println( "\nTRAVERSE after GARBAGE COLLECTION of 9 removal: ");
+//      searchTree.traverse(intPrinter);
+//      System.out.println( "\ntree 1 size: " + searchTree.size() 
+//         + "  Hard size: " + searchTree.sizeHard() );
+//    
+//      System.out.println( "\n60: Reinsert after garbage");
+//      searchTree.insert(60);
+//      System.out.println( "\ntree 1 size: " + searchTree.size() 
+//            + "  Hard size: " + searchTree.sizeHard() );
+//     
       
 //      
 //      
@@ -160,9 +234,7 @@ public class Foothill
 //      System.out.println( "tree 1 size: " + searchTree.size() 
 //         + "  Hard size: " + searchTree.sizeHard() );
 //
-//      // test assignment operator
-      FHlazySearchTree<Integer> searchTree2 
-         = (FHlazySearchTree<Integer>)searchTree.clone();
+
 
       System.out.println( "\n\nAttempting 1 removal: ");
       if (searchTree.remove(20))
