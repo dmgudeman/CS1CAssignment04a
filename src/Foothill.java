@@ -30,11 +30,11 @@ public class Foothill
       searchTree.insert(30);
       searchTree.insert(59);
       searchTree.insert(10);
-//      searchTree.insert(9);
+      searchTree.insert(9);
       searchTree.insert(60);
       searchTree.insert(70);
-//      searchTree.insert(61);
-//      searchTree.insert(62);
+      searchTree.insert(61);
+      searchTree.insert(62);
      
       //TRAVERSE
       System.out.println( "\nTRAVERSE after populating: ");
@@ -44,8 +44,8 @@ public class Foothill
       
 //      SOFT REMOVAL
       System.out.println( "\n59 soft removal: ");
-      if (searchTree.remove(50))
-         System.out.println( "removed " + 50);
+      if (searchTree.remove(59))
+         System.out.println( "removed " + 59);
       System.out.println( "tree 1 size: " + searchTree.size() 
          + "  Hard size: " + searchTree.sizeHard() );
       
