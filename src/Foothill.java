@@ -238,6 +238,7 @@ public class Foothill
       }
      
       
+      
       System.out.println( "\nsearch_tree now:");
       searchTree.traverse(intPrinter);
       System.out.println( "\ntree 1 size: " + searchTree.size() 
@@ -255,6 +256,17 @@ public class Foothill
 
       System.out.println(searchTree.findMax());
       System.out.println(searchTree.findMin());
+      
+      System.out.println( "\nRemove 50. " );
+      searchTree.remove(50);
+      searchTree.traverse(intPrinter);
+      System.out.println( "\ntree 1 size: " + searchTree.size() 
+         + "  Hard size: " + searchTree.sizeHard() );
+
+      System.out.println( "\nCollecting Garbage after remove 50. " );
+      searchTree.collectGarbage();
+      System.out.println( "tree 1 size: " + searchTree.size() 
+         + "  Hard size: " + searchTree.sizeHard() );
    }
    
 }

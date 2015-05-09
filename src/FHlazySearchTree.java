@@ -289,8 +289,10 @@ public class FHlazySearchTree<E extends Comparable< ? super E > >
       {   
          if (root.deleted == true)
          { 
-            mSizeHard--;
-            return root = nodeReplacement(root);          
+            root.data = root.lftChild.data;
+            root.deleted =  root.lftChild.deleted;
+            root.lftChild.deleted = true;
+            return root;          
          }
          else
             return root;
@@ -298,16 +300,15 @@ public class FHlazySearchTree<E extends Comparable< ? super E > >
       else if(root.rtChild != null)
       {    
          if (root.deleted == true)
-         {            
-            root = nodeReplacement(root);
-            mSizeHard--;
-            root.deleted = false;
-            return root;
+         { 
+            root.data = root.rtChild.data;
+            root.deleted = root.rtChild.deleted;
+            root.rtChild.deleted = true;
+           
+         return root;          
          }
-         else 
-         {
-           return root;
-         }
+         else
+         return root;
       }
       else if (root.lftChild == null && root.rtChild == null)
       {  
