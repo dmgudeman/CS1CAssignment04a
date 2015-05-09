@@ -117,15 +117,22 @@ public class FHlazySearchTree<E extends Comparable< ? super E > >
       
       if (root == null)
          return new FHlazySTNode<E>(x, null, null, false);
-        
+
       compareResult = x.compareTo(root.data); 
-      if ( compareResult < 0 && root.deleted == false)
+      if ( compareResult < 0 )
          root.lftChild = insert(root.lftChild, x);    
-      else if ( compareResult > 0 && root.deleted == false)
+      else if ( compareResult > 0 )
          root.rtChild = insert( root.rtChild, x);
-      else if (compareResult == 0 &&  root.deleted == true)
+      else if ( compareResult == 0)
       {
-         root.deleted = false;
+         if(root.deleted == true)
+         {
+            root.deleted = false;
+            mSizeHard--;
+            return root;
+           
+         }
+         mSize--;
          mSizeHard--;
          return root;
       }
@@ -211,7 +218,7 @@ public class FHlazySearchTree<E extends Comparable< ? super E > >
 
    protected FHlazySTNode<E> nodeReplacement(FHlazySTNode<E> root)
    {
-      int compareResult; // avoid multiple calls to compareTo()
+     // int compareResult; // avoid multiple calls to compareTo()
 
       if (root == null)
       {
@@ -219,45 +226,30 @@ public class FHlazySearchTree<E extends Comparable< ? super E > >
       } 
       else if (root.rtChild != null && root.lftChild != null)
       {
-         compareResult = root.data.compareTo(root.rtChild.data);
-         if (compareResult < 0)
+         FHlazySTNode<E> tempNode;
+         
+         tempNode = findMin(root.rtChild);
+         
+         root.data = tempNode.data;
+         if (tempNode.deleted == false)
          {
-            root = root.rtChild;
-            if (root.deleted == false)
-            {
-               root.deleted = false;
-               return root;
-            } 
-            else
-               nodeReplacement(root);
-         } 
-         else if (compareResult > 0)
-         {
-            root = root.lftChild;
-            if (root.deleted = false)
-            {
-               root.deleted = false;
-               return root;
-            } 
-            else
-               nodeReplacement(root);
-         }
-         return null;
+            tempNode.deleted = true;
+            mSizeHard++;
+         }       
+         return root;
       } 
       else if (root.rtChild != null && root.lftChild == null)
       {
-         root.rtChild.deleted = true;
-         return root = root.rtChild;
+         root = root.rtChild;
+         return root;
       } 
       else if (root.rtChild == null && root.lftChild != null)
       {
-         root.lftChild.deleted = true;
-         return root = root.lftChild;
+         root = root.lftChild;
+         return root;
       } 
       else
-      {
          return root = null;
-      }
    }
 
 //////////////////////////////////////////////////////////////////////
@@ -285,9 +277,9 @@ public class FHlazySearchTree<E extends Comparable< ? super E > >
       {   
          if (root.deleted == true )
          {  
-             mSizeHard--;
-             System.out.println("mSize Hard = " + mSizeHard);
+            
              root.data = nodeReplacement(root).data;
+             mSizeHard--;
              root.deleted = false;
              return root;
          } 
@@ -298,7 +290,7 @@ public class FHlazySearchTree<E extends Comparable< ? super E > >
          if (root.deleted == true)
          { 
             mSizeHard--;
-            return root = nodeReplacement(root);     
+            return root = nodeReplacement(root);          
          }
          else
             return root;
@@ -306,9 +298,9 @@ public class FHlazySearchTree<E extends Comparable< ? super E > >
       else if(root.rtChild != null)
       {    
          if (root.deleted == true)
-         { 
-            mSizeHard--;
+         {            
             root = nodeReplacement(root);
+            mSizeHard--;
             root.deleted = false;
             return root;
          }
@@ -322,7 +314,7 @@ public class FHlazySearchTree<E extends Comparable< ? super E > >
          if (root.deleted == true)
          { 
             mSizeHard--;
-            return root = null;
+            root = null;        
          }
          return root;
       }    
